@@ -1,33 +1,29 @@
-/*
- * FILE: student-card.ts
- * WHAT: The student card component. Shows one student's photo, name, faculty and quote.
- * WHY:  Keeps the card reusable. The directory page hands each student in through an input.
- */
-
-import { Component, computed, input, signal } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Student } from '../../models/student.model';
+import { SavedService } from '../../services/saved.service';
 
 @Component({
-  selector: 'app-student-card',
   imports: [RouterLink],
-  templateUrl: './student-card.html',
+  selector: 'app-student-card',
   styleUrl: './student-card.css',
+  templateUrl: './student-card.html',
 })
 export class StudentCard {
   // The parent page will give us one student through this input.
   readonly student = input.required<Student>();
 
-  // Did the portrait fail to load? Starts as false (everything fine).
-  private readonly imageFailed = signal(false);
+  // The shared service. The card does not own the saved list; it only asks.
+  private readonly saved = inject(SavedService);
 
-  // The path actually shown: placeholder if the real image failed.
-  protected readonly photoSrc = computed(() =>
-    this.imageFailed() ? 'images/placeholder-portrait.svg' : this.student().photo,
-  );
+  // Is THIS student saved? computed() re-runs when the service's list changes.
+  protected readonly isSaved = computed(() => this.saved.isSaved(this.student().id));
 
-  // Called by the template when the image cannot be loaded.
-  protected onImageError(): void {
-    this.imageFailed.set(true);
+  protected onToggleSaved(event: Event): void {
+    // The whole card is a link. Without these two lines, a click on the
+    // heart would ALSO open the student's profile.
+    event.preventDefault();
+    event.stopPropagation();
+    this.saved.toggle(this.student().id);
   }
 }
