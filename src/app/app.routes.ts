@@ -8,6 +8,7 @@ import { Routes } from '@angular/router';
 
 import { StudentsPage } from './pages/students-page/students-page';
 import { PlaceholderPage } from './pages/placeholder-page/placeholder-page';
+import { LoginPage } from './pages/login-page/login-page';
 
 export const routes: Routes = [
   // STEP 1: The landing page. An empty path '' means "the home URL".
@@ -18,7 +19,7 @@ export const routes: Routes = [
   // TIP: When you build the real page, replace `PlaceholderPage` with it.
   { path: 'teachers', component: PlaceholderPage, data: { title: 'Teachers & Staff' } },
   { path: 'gallery', component: PlaceholderPage, data: { title: 'Gallery' } },
-  { path: 'login', component: PlaceholderPage, data: { title: 'Student login' } },
+  { path: 'login', component: LoginPage, title: 'Student login · GIU Yearbook' },
 
   // STEP 3: `:id` is a route PARAMETER. /students/3 and /students/7 both
   // match this route. The page can read the number later.
